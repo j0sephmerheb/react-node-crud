@@ -5,7 +5,7 @@ var mongoConn = false;
                                           
 mongoDb.connect = async () => {
     try {
-        mongoConn = await mongoose.connect('mongodb+srv://admin:lCr5SiR7yAjGtNLo@movies.bwawn.mongodb.net/movies?retryWrites=true&w=majority', {
+        mongoConn = await mongoose.connect(process.env.ENV_MONGO_DB_URL, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useFindAndModify: false,

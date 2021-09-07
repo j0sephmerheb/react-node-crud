@@ -1,9 +1,10 @@
-const db = require('../db/postgres')
-const Movie = db.movies;
+const Movie = require('../models/movie')
+const mongoose = require('mongoose')
+
 
 /* Get all Movies */
 getMovies = async (req, res) => {
-    await Movie.findAll()
+    await Movie.find()
         .then(data => {
             res.send(data);
         })
@@ -16,95 +17,111 @@ getMovies = async (req, res) => {
 }
 
 /* Get Movie by id */
-getMovieById = (req, res) => {
-    const id = req.params.id;
+getMovieById = async (req, res) => {
+    await Movie.findOne({ _id: req.params.id }, (err, movie) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err })
+        }
 
-    Movie.findByPk(id)
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: "Error retrieving Movie with id=" + id
-            });
-        });
+        return res.status(200).json({ success: true, data: movie })
+    }).catch(err => console.log(err))
 }
 
 
 /* Create Movie */
 createMovie = (req, res) => {
-    const movie = {
-        id: Date.now(),
+    const body = req.body;
+
+    if (!body) {
+        return res.status(400).json({
+            success: false,
+            error: 'You must fill the info',
+        })
+    }
+
+    const movie = new Movie({
+        _id: new mongoose.Types.ObjectId(),
         title: req.body.title,
         date_added: req.body.date_added,
         release_date: req.body.release_date,
         category: req.body.category,
         movie_director: req.body.movie_director,
         poster: req.body.poster,
-    };
+    })
 
-    Movie.create(movie)
-        .then(data => {
-            res.send(data);
+    if (!movie) {
+        return res.status(400).json({ success: false, error: err })
+    }
+
+    movie
+        .save()
+        .then(() => {
+            return res.status(200).json({
+                success: true,
+                message: 'Movie created!',
+            })
         })
-        .catch(err => {
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while creating the Movie."
-            });
-        });
+        .catch(error => {
+            return res.status(400).json({
+                error,
+                message: 'Movie not created!',
+            })
+        })
 }
 
 
 /* Update Movie */
-updateMovie = (req, res) => {
-    const id = req.params.id;
+updateMovie = async (req, res) => {
+    const body = req.body
 
-    Movie.update(req.body, {
-        where: { id: id }
-    })
-        .then(num => {
-            if (num == 1) {
-                res.send({
-                    message: "Movie was updated successfully."
-                });
-            } else {
-                res.send({
-                    message: "Error updating Movie with id=" + id
-                });
-            }
+    if (!body) {
+        return res.status(400).json({
+            success: false,
+            error: 'You must provide a body to update',
         })
-        .catch(err => {
-            res.status(500).send({
-                message: "Error updating Movie with id=" + id
-            });
-        });
+    }
+
+    Movie.findOne({ _id: req.params.id }, (err, movie) => {
+        if (err) {
+            return res.status(404).json({
+                err,
+                message: 'Movie not found!',
+            })
+        }
+        movie.id = new mongoose.Types.ObjectId(),
+        movie.title = body.title,
+        movie.date_added = body.date_added,
+        movie.release_date = body.release_date,
+        movie.category = body.category,
+        movie.movie_director = body.movie_director,
+        movie.poster = body.poster,
+        movie
+            .save()
+            .then(() => {
+                return res.status(200).json({
+                    success: true,
+                    message: 'Movie updated!',
+                })
+            })
+            .catch(error => {
+                return res.status(404).json({
+                    error,
+                    message: 'Movie not updated!',
+                })
+            })
+    })
 }
 
 
 /* Delete Movie */
-deleteMovie = (req, res) => {
-    const id = req.params.id;
+deleteMovie = async (req, res) => {
+    await Movie.findOneAndDelete({ _id: req.params.id }, (err, movie) => {
+        if (err) {
+            return res.status(400).json({ success: false, error: err })
+        }
 
-    Movie.destroy({
-        where: { id: id }
-    })
-        .then(num => {
-            if (num == 1) {
-                res.send({
-                    message: "Movie was deleted successfully!"
-                });
-            } else {
-                res.send({
-                    message: "Could not delete Movie with id=" + id
-                });
-            }
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: "Could not delete Movie with id=" + id
-            });
-        });
+        return res.status(200).json({ success: true, data: movie })
+    }).catch(err => console.log(err))
 }
 
 

@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { Row, Col } from 'reactstrap';
 import api from '../api'
 
-
 class MoviesInsert extends Component {
     constructor(props) {
         super(props)
@@ -15,36 +14,18 @@ class MoviesInsert extends Component {
             movie_director: '',
             poster: ''
         }
+
+        this.handleInputChange = this.handleInputChange.bind(this);
     }
 
-    handleChangeInputTitle = async event => {
-        const title = event.target.value
-        this.setState({ title })
-    }
+    handleInputChange(event) {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
 
-    handleChangeInputDateAdded = async event => {
-        const date_added = event.target.value
-        this.setState({ date_added })
-    }
-
-    handleChangeInputReleaseDate = async event => {
-        const release_date = event.target.value
-        this.setState({ release_date })
-    }
-
-    handleChangeInputCategory = async event => {
-        const category = event.target.value
-        this.setState({ category })
-    }
-
-    handleChangeInputDirector = async event => {
-        const movie_director = event.target.value
-        this.setState({ movie_director })
-    }
-
-    handleChangeInputPoster = async event => {
-        const poster = event.target.value
-        this.setState({ poster })
+        this.setState({
+            [name]: value
+        });
     }
 
     handleIncludeMovie = async () => {
@@ -65,7 +46,6 @@ class MoviesInsert extends Component {
     }
 
     render() {
-        const { title, date_added, release_date, category, movie_director, poster } = this.state
         return (
             <div className="py-4">
                 <div className="container">
@@ -75,39 +55,39 @@ class MoviesInsert extends Component {
 
                             <Row className="form-group align-items-center">
                                 <Col md="3"><label>Title:</label></Col>
-                                <Col md="9"><input className="form-control" type="text" value={title}
-                                    onChange={this.handleChangeInputTitle} /></Col>
+                                <Col md="9"><input className="form-control" type="text" name='title' value={this.state.title}
+                                    onChange={this.handleInputChange} /></Col>
                             </Row>
 
                             <Row className="form-group align-items-center">
                                 <Col md="3"><label>Date Added:</label></Col>
-                                <Col md="9"><input className="form-control" type="date" value={date_added}
-                                    onChange={this.handleChangeInputDateAdded} /></Col>
+                                <Col md="9"><input className="form-control" type="date" name='date_added' value={this.state.date_added}
+                                    onChange={this.handleInputChange} /></Col>
                             </Row>
 
                             <Row className="form-group align-items-center">
                                 <Col md="3"><label>Release Date:</label></Col>
-                                <Col md="9"><input className="form-control" type="date" value={release_date}
-                                    onChange={this.handleChangeInputReleaseDate} /></Col>
+                                <Col md="9"><input className="form-control" type="date" name='release_date' value={this.state.release_date}
+                                    onChange={this.handleInputChange} /></Col>
                             </Row>
 
                             <Row className="form-group align-items-center">
                                 <Col md="3"><label>Category:</label></Col>
-                                <Col md="9"><input className="form-control" type="text" value={category}
-                                    onChange={this.handleChangeInputCategory} /></Col>
+                                <Col md="9"><input className="form-control" type="text" name='category' value={this.state.category}
+                                    onChange={this.handleInputChange} /></Col>
                             </Row>
 
                             <Row className="form-group align-items-center">
                                 <Col md="3"><label>Director:</label></Col>
-                                <Col md="9"><input className="form-control" type="text" value={movie_director}
-                                    onChange={this.handleChangeInputDirector} /></Col>
-                            </Row> 
+                                <Col md="9"><input className="form-control" type="text" name='movie_director' value={this.state.movie_director}
+                                    onChange={this.handleInputChange} /></Col>
+                            </Row>
 
                             <Row className="form-group align-items-center">
                                 <Col md="3"><label>Poster:</label></Col>
-                                <Col md="9"><input className="form-control" type="text" value={poster}
-                                    onChange={this.handleChangeInputPoster} /></Col>
-                            </Row> 
+                                <Col md="9"><input className="form-control" type="text" name='poster' value={this.state.poster}
+                                    onChange={this.handleInputChange} /></Col>
+                            </Row>
 
                             <Row className="justify-content-end">
                                 <Col md="3">

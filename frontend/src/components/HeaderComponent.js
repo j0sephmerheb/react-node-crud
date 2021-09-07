@@ -7,10 +7,7 @@ const Header = () => {
     const [isOpen, setIsOpen] = useState(false);
     const toggle = () => setIsOpen(!isOpen);
     const { loginWithRedirect, logout, user, isAuthenticated, isLoading } = useAuth0();
-    
-    // TEMP
-    const admin = "josephmerheb@gmail.com";
-    //
+    const admin = process.env.REACT_APP_ADMIN_ACCOUNT;
 
     if (isLoading) {
         return <div className="loader"></div>;
@@ -23,6 +20,9 @@ const Header = () => {
                 <NavbarToggler onClick={toggle} />
                 <Collapse isOpen={isOpen} navbar>
                     <Nav className="ml-auto" navbar>
+                        <NavItem>
+                            <NavLink className="nav-link" to='/'>Home</NavLink>
+                        </NavItem>
 
                         {!isAuthenticated && (
                             <NavItem>
@@ -44,10 +44,6 @@ const Header = () => {
                             </>
                         )}
 
-                        <NavItem>
-                            <NavLink className="nav-link" to='/'>Home</NavLink>
-                        </NavItem>
-
                         {isAuthenticated && user.name === admin && (
                             <>
                                 <NavItem>
@@ -64,6 +60,5 @@ const Header = () => {
         </Navbar>
     );
 }
-
 
 export default Header;

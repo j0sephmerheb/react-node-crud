@@ -1,61 +1,17 @@
-module.exports = (sequelize, Sequelize) => {
-    const Movie = sequelize.define('movie', {
-        id: {
-            type: Sequelize.STRING,
-            primaryKey: true,
-            allowNull: {
-                args: false
-            }
-        },
-        title: {
-            type: Sequelize.STRING,
-            allowNull: {
-                args: false
-            }
-        },
-        date_added: {
-            type: Sequelize.STRING,
-            allowNull: {
-                args: false
-            }
-        },
-        release_date: {
-            type: Sequelize.STRING,
-            allowNull: {
-                args: false
-            }
-        },
-        category: {
-            type: Sequelize.STRING,
-            allowNull: {
-                args: false
-            }
-        },
-        movie_director: {
-            type: Sequelize.STRING,
-            allowNull: {
-                args: false
-            }
-        },
-        poster: {
-            type: Sequelize.STRING,
-            allowNull: {
-                args: false
-            }
-        },
-        rating_avg: {
-            type: Sequelize.NUMERIC,
-            allowNull: {
-                args: false
-            }
-        }
-    },{
-        timestamps: false
-    });
-    Movie.associate = (models) => {
-        Movie.hasMany(models.SeenMovie, {
-            foreignKey: 'movie_id',
-        });
-    };
-    return Movie;
-};
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
+
+const Movie = new Schema(
+    {
+        _id: mongoose.Schema.Types.ObjectId,
+        title: { type: String, required: true },
+        date_added: { type: String, required: true },
+        release_date: {type: String, required: true },
+        category: {type: String, required: true},
+        movie_director: {type: String, required: true},
+        poster: {type: String, required: false},
+        rating_avg: {type: Number, required: false}
+    }
+)
+
+module.exports = mongoose.model('movie', Movie)

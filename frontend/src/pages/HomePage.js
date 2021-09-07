@@ -14,26 +14,15 @@ class RenderMovies extends Component {
     }
 
     componentDidMount = async () => {
-        const sortedBy = this.props.sorted;
-
         this.setState({
             isLoading: true
         })
 
         await api.getAllMovies().then(movies => {
-            if(sortedBy === 'date'){
-                function date_sorting(a, b) {
-                    return new Date(b.release_date).getTime() - new Date(a.release_date).getTime();
-                }
-                movies.data.sort(date_sorting);    
+            function date_sorting(a, b) {
+                return new Date(b.release_date).getTime() - new Date(a.release_date).getTime();
             }
-            else{
-                /* Sort by rating_avg */
-                function rating_sorting(a, b) {
-                    return b.rating_avg - a.rating_avg;
-                }
-                movies.data.sort(rating_sorting);
-            }
+            movies.data.sort(date_sorting);
 
             this.setState({
                 movies: movies.data
@@ -49,11 +38,10 @@ class RenderMovies extends Component {
                 <Row>
                     {movies.map(function (movie) {
                         return (
-                            <Col md="3" className="mb-4" key={movie.id}>
-                                <Link to={`/movie/${movie.id}`} className="holder">
+                            <Col md="3" className="mb-4" key={movie._id}>
+                                <Link to={`/movie/${movie._id}`} className="holder">
                                     <div className="photo">
                                         <img src={movie.poster} title={movie.title} alt={movie.title} />
-                                        <div className="ratings">{movie.rating_avg} / 10</div>
                                     </div>
                                     <div className="details">
                                         <div className="title">{movie.title}</div>
@@ -80,12 +68,6 @@ function HomePage() {
                         {/* Release Date DESC */}
                         <h3 className="mb-4">Latest</h3>
                         <RenderMovies sorted="date" />
-                    </div>
-
-                    {/* Rating DESC */}
-                    <div className="mb-4">
-                        <h3 className="mb-4">Most popular</h3>
-                        <RenderMovies sorted="rating" />
                     </div>
                 </div>
             </div>
