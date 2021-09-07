@@ -261,7 +261,7 @@ article .details{
 }
 
 
-.listing.movies .ratings{
+.listing.movies .comments{
   position: absolute;
   top: 0;
   right: 0;
@@ -276,13 +276,13 @@ article .details{
   padding: 10px;
 }
 
-.ratings .holder{
+.comments .holder{
   padding: 8px;
   background: #fff;
   border-radius: 5px;
   color: #000;
 }
-.ratings .value{
+.comments .value{
   font-weight: 700;
   font-size: 0.85rem;
   font-size: 1.2rem;
@@ -290,20 +290,20 @@ article .details{
   color: var(--secondary);
   float: right;
 }
-.ratings .user{
+.comments .user{
   font-size: 0.85rem;
   padding-right: 10px;
   float: left;
   color: var(--secondary);
 }
-.ratings .title{
+.comments .title{
   font-weight: 600;
   font-size: 1rem;
   clear: both;
   color: var(--primary);
   font-family: 'Roboto Slab';  
 }
-.ratings .comment{
+.comments .comment{
   text-align: justify;
   line-height: 1.2;
   font-size: 0.9rem;

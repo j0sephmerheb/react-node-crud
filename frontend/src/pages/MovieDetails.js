@@ -3,14 +3,14 @@ import { Row, Col } from 'reactstrap';
 import api from '../api'
 
 /* Render Comments */
-function RenderComments({ ratings, onRemove, isAuthenticated, username }) {
+function RenderComments({ comments, onRemove, isAuthenticated, username }) {
     const admin = process.env.REACT_APP_ADMIN_ACCOUNT;
 
-    if (ratings && ratings.length > 0) {
+    if (comments && comments.length > 0) {
         return (
             <>
-                <div className="listing ratings">
-                    {ratings.map((item) => {
+                <div className="listing comments">
+                    {comments.map((item) => {
                         return (
                             <div className="holder mb-2" key={item._id} id={item._id}>
                                 <div className="user">{item.userId}</div>
@@ -50,7 +50,7 @@ class MovieDetails extends Component {
 
         this.handleInputChange = this.handleInputChange.bind(this);
         this.updateMovieState = this.updateMovieState.bind(this);
-        this.updateRatingsState = this.updateRatingsState.bind(this);
+        this.updateCommentsState = this.updateCommentsState.bind(this);
     }
 
     /* Cmment inut change */
@@ -69,9 +69,9 @@ class MovieDetails extends Component {
         this.setState({ movie: data })
     }
 
-    /* Set Movie ratings */
-    updateRatingsState(data) {
-        this.setState({ ratings: data })
+    /* Set Movie Comments */
+    updateCommentsState(data) {
+        this.setState({ comments: data })
     }
 
     /* Handle Movie Details */
@@ -82,26 +82,27 @@ class MovieDetails extends Component {
         })
     }
 
-    /* Handle Ratings */
-    handleRatings = async (movieId) => {
-        await api.getAllRatings(movieId).then(res => {
+    /* Handle Comments */
+    handleComments = async (movieId) => {
+        await api.getAllComments(movieId).then(res => {
             const data = res.data.data
-            this.updateRatingsState(data)
+            this.updateCommentsState(data)
         })
     }
 
     /* handle submit */
-    addRating = async () => {
+    addComment = async () => {
         const data = this.state.comment;
 
         if (data.commentContent && data.commentTitle) {
-            await api.insertRating(data).then(res => {
-                window.alert(`Rating added successfully`)
-                this.handleRatings(this.state.comment.movieId)
+            await api.insertComment(data).then(res => {
+                window.alert(`Comment added successfully`)
+                this.handleComments(this.state.comment.movieId)
                 this.setState({
                     comment: {
                         commentTitle: '',
-                        commentContent: ''
+                        commentContent: '',
+                        userId: ''
                     }
                 })
             })
@@ -112,19 +113,19 @@ class MovieDetails extends Component {
 
 
     /* Delete Comment */
-    handleDelete = async (ratingId) => {
+    handleDelete = async (commentId) => {
         const confirmBox = window.confirm(
             "Are you sure you want to delete?"
         )
         if (confirmBox === true) {
 
 
-            await api.deleteRatingById(ratingId)
+            await api.deleteCommentById(commentId)
                 .then(() => {
                     alert('Comment deleted')
                 })
                 .then(() => {
-                    this.handleRatings(this.state.comment.movieId)
+                    this.handleComments(this.state.comment.movieId)
                 })
                 .catch((error) => {
                     console.log(error);
@@ -134,9 +135,11 @@ class MovieDetails extends Component {
 
     /* handleUser */
     handleUser = async () => {
-        let comment = { ...this.state.comment }
-        comment.userId = this.props.user.name;
-        this.setState({ comment })
+        if(this.props.isAuthenticated){  
+            let comment = {...this.state.comment};
+            comment.userId = this.props.user.name;
+            this.setState({comment}) ;
+        }
     }
 
     /* Reset Form */
@@ -147,7 +150,7 @@ class MovieDetails extends Component {
     /* Component Did Mount */
     componentDidMount = async (props) => {
         const movieId = window.location.pathname.split('/')[2];
-        this.handleRatings(movieId)
+        this.handleComments(movieId)
         this.handleMovieDetails(movieId);
         this.handleUser()
     }
@@ -181,7 +184,7 @@ class MovieDetails extends Component {
                     </article>
 
 
-                    {/* Movie Ratings / Comments - From the MongoDb */}
+                    {/* Movie Comments */}
                     {isAuthenticated && (
                         <h5>Add your comment</h5>
                     )}
@@ -189,16 +192,16 @@ class MovieDetails extends Component {
                         <h5>Please login to add a comment</h5>
                     )}
 
-                    <div className="listing ratings">
+                    <div className="listing comments">
                         {isAuthenticated && (
                             <div className="mb-4">
                                 <input className="form-control mb-2" onChange={this.handleInputChange} name="commentTitle" required value={this.state.comment.commentTitle} />
                                 <textarea className="form-control mb-2" rows="3" onChange={this.handleInputChange} name="commentContent" required value={this.state.comment.commentContent}></textarea>
-                                <button className="btn btn-primary px-4" onClick={this.addRating}>Submit</button>
+                                <button className="btn btn-primary px-4" onClick={this.addComment}>Submit</button>
                             </div>
                         )}
 
-                        <RenderComments ratings={this.state.ratings} onRemove={this.handleDelete} isAuthenticated={isAuthenticated} username={username} />
+                        <RenderComments comments={this.state.comments} onRemove={this.handleDelete} isAuthenticated={isAuthenticated} username={username} />
                     </div>
 
                 </div>

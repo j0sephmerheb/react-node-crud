@@ -9,8 +9,7 @@ const Movie = new Schema(
         release_date: {type: String, required: true },
         category: {type: String, required: true},
         movie_director: {type: String, required: true},
-        poster: {type: String, required: false},
-        rating_avg: {type: Number, required: false}
+        poster: {type: String, required: false}
     }
 )
 

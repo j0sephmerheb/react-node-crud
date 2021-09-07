@@ -9,7 +9,7 @@ const mongoDb = require('./db/mongoDb')
 
 /* Routes */
 const movieRouter = require('./routes/movies')
-const ratingRouter = require('./routes/ratings')
+const commentRouter = require('./routes/comments')
 
 const app = express()
 const apiPort = 8000
@@ -26,6 +26,6 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api', movieRouter)
-app.use('/api', ratingRouter)
+app.use('/api', commentRouter)
 
 app.listen(apiPort, () => console.log(`Server running on port ${apiPort}`))

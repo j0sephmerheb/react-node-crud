@@ -16,7 +16,6 @@ const Header = () => {
     return (
         <Navbar color="dark" dark expand="md">
             <div className="container">
-                <NavbarBrand className="mr-auto">My Movie Directory</NavbarBrand>
                 <NavbarToggler onClick={toggle} />
                 <Collapse isOpen={isOpen} navbar>
                     <Nav className="ml-auto" navbar>

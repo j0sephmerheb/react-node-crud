@@ -10,9 +10,9 @@ export const deleteMovieById = id => api.delete(`/movie/${id}`)
 export const getMovieById = id => api.get(`/movie/${id}`)
 export const getAllMovies = () => api.get(`/movies`)
 
-export const insertRating = payload => api.post(`/rating`, payload)
-export const deleteRatingById = id => api.delete(`/rating/${id}`)
-export const getAllRatings = id => api.get(`/ratings/${id}`)
+export const insertComment = payload => api.post(`/comment`, payload)
+export const deleteCommentById = id => api.delete(`/comment/${id}`)
+export const getAllComments = id => api.get(`/comments/${id}`)
 
 const apis = {
     insertMovie,
@@ -20,9 +20,9 @@ const apis = {
     updateMovieById,
     deleteMovieById,
     getMovieById,
-    insertRating,
-    deleteRatingById,
-    getAllRatings
+    insertComment,
+    deleteCommentById,
+    getAllComments
 }
 
 export default apis

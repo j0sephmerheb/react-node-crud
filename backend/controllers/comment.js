@@ -1,48 +1,47 @@
-const Rating = require('../models/rating')
+const Comment = require('../models/comment')
 const mongoose = require('mongoose')
 
-/* Create rating */
-createRating = (req, res) => {
+/* Create Comment */
+createComment = (req, res) => {
     const body = req.body;
 
     if (!body) {
         return res.status(400).json({
             success: false,
-            error: 'You must provide a rating',
+            error: 'You must provide a comment',
         })
     }
 
-    const ratingObj = new Rating({
+    const commentObj = new Comment({
         _id: new mongoose.Types.ObjectId(),
-        rating: req.body.rating,
         commentTitle: req.body.commentTitle,
         commentContent: req.body.commentContent,
         userId: req.body.userId,
         movieId: req.body.movieId
     })
 
-    if (!ratingObj) {
+    if (!commentObj) {
         return res.status(400).json({ success: false, error: err })
     }
 
-    ratingObj
+    commentObj
         .save()
         .then(() => {
             return res.status(200).json({
                 success: true,
-                message: 'Rating created!',
+                message: 'Comment created!',
             })
         })
         .catch(error => {
             return res.status(400).json({
                 error,
-                message: 'Rating not created!',
+                message: 'Comment not created!',
             })
         })
 }
 
-/* update rating */
-updateRating = async (req, res) => {
+/* Update Comment */
+updateComment = async (req, res) => {
     const body = req.body
 
     if (!body) {
@@ -52,72 +51,71 @@ updateRating = async (req, res) => {
         })
     }
 
-    Rating.findOne({ _id: req.params.id }, (err, ratingObj) => {
+    Comment.findOne({ _id: req.params.id }, (err, commentObj) => {
         if (err) {
             return res.status(404).json({
                 err,
-                message: 'Rating not found!',
+                message: 'Comment not found!',
             })
         }
-        ratingObj.id = new mongoose.Types.ObjectId(),
-        ratingObj.rating = body.rating
-        ratingObj.commentTitle = body.commentTitle
-        ratingObj.commentContent = body.commentContent
-        ratingObj.userId = body.userId
-        ratingObj.movieId = body.movieId
-        ratingObj
+        commentObj.id = new mongoose.Types.ObjectId(),
+        commentObj.commentTitle = body.commentTitle
+        commentObj.commentContent = body.commentContent
+        commentObj.userId = body.userId
+        commentObj.movieId = body.movieId
+        commentObj
             .save()
             .then(() => {
                 return res.status(200).json({
                     success: true,
-                    message: 'Rating updated!',
+                    message: 'Comment updated!',
                 })
             })
             .catch(error => {
                 return res.status(404).json({
                     error,
-                    message: 'Rating not updated!',
+                    message: 'Comment not updated!',
                 })
             })
     })
 }
 
-/* delete rating */
-deleteRating = async (req, res) => {
-    await Rating.findOneAndDelete({ _id: req.params.id }, (err, ratingObj) => {
+/* Delete Comment */
+deleteComment = async (req, res) => {
+    await Comment.findOneAndDelete({ _id: req.params.id }, (err, commentObj) => {
         if (err) {
             return res.status(400).json({ success: false, error: err })
         }
 
-        return res.status(200).json({ success: true, data: ratingObj })
+        return res.status(200).json({ success: true, data: commentObj })
     }).catch(err => console.log(err))
 }
 
-/* get rating by id */
-getRatingById = async (req, res) => {
-    await Rating.findOne({ _id: req.params.id }, (err, ratingObj) => {
+/* Get Comment by id */
+getCommentById = async (req, res) => {
+    await Comment.findOne({ _id: req.params.id }, (err, commentObj) => {
         if (err) {
             return res.status(400).json({ success: false, error: err })
         }
 
-        return res.status(200).json({ success: true, data: ratingObj })
+        return res.status(200).json({ success: true, data: commentObj })
     }).catch(err => console.log(err))
 }
 
-/* get all ratings for a movie */
-getRatings = async (req, res) => {
-    await Rating.find({movieId: req.params.movieId}, (err, ratings) => {
+/* get all Comments for a movie */
+getComments = async (req, res) => {
+    await Comment.find({movieId: req.params.movieId}, (err, commentObj) => {
         if (err) {
             return res.status(400).json({ success: false, error: err })
         }
-        return res.status(200).json({ success: true, data: ratings })
+        return res.status(200).json({ success: true, data: commentObj })
     }).catch(err => console.log(err))
 }
 
 module.exports = {
-    createRating,
-    updateRating,
-    deleteRating,
-    getRatings,
-    getRatingById
+    createComment,
+    updateComment,
+    deleteComment,
+    getComments,
+    getCommentById
 }
