@@ -12,7 +12,7 @@ const movieRouter = require('./routes/movies')
 const ratingRouter = require('./routes/ratings')
 
 const app = express()
-const apiPort = 8002
+const apiPort = 8000
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cors())
